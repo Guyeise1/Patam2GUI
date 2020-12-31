@@ -6,11 +6,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="sample.Map.MapController"
-            prefHeight="400.0" prefWidth="600.0">
-    <GridPane>
+    <GridPane xmlns="http://javafx.com/javafx"
+    xmlns:fx="http://javafx.com/fxml"
+    fx:controller="sample.Map.MapController"
+    prefHeight="400.0" prefWidth="600.0">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="607.0" minWidth="10.0" prefWidth="277.0" />
         </columnConstraints>
@@ -50,4 +49,3 @@
     </GridPane>
 
 
-</AnchorPane>

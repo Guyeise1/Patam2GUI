@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-    <GridPane xmlns="http://javafx.com/javafx"
+<GridPane xmlns="http://javafx.com/javafx"
     xmlns:fx="http://javafx.com/fxml"
     fx:controller="sample.Map.MapController"
     prefHeight="400.0" prefWidth="600.0">
@@ -34,7 +34,7 @@
                     <Button mnemonicParsing="false" scaleX="2.0" scaleY="2.0" text="Calculate path" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
                 </children>
             </GridPane>
-            <GridPane gridLinesVisible="true" GridPane.rowIndex="1">
+            <GridPane fx:id="map" gridLinesVisible="true" GridPane.rowIndex="1">
                 <columnConstraints>
                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />

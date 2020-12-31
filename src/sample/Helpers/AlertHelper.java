@@ -1,4 +1,4 @@
-package sample.Map;
+package sample.Helpers;
 
 import javafx.scene.control.Alert;
 import javafx.stage.*;

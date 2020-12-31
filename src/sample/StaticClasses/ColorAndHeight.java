@@ -1,11 +1,13 @@
 package sample.StaticClasses;
 
-public class ItemInMap {
+import javafx.scene.paint.Color;
 
-    public String color;
+public class ColorAndHeight {
+
+    public Color color;
     public int height;
 
-    public ItemInMap(String color, int height) {
+    public ColorAndHeight(Color color, int height) {
         this.color = color;
         this.height = height;
     }

@@ -119,8 +119,7 @@ public class MapModel {
     private void checkForAirplaneChangedLocation() {
         try {
             while (shouldListenToAirplaneChanges) {
-                fetchAirplaneLocation();
-                Point airplaneLocation = getCurrentPlaneLocation();
+                Point airplaneLocation = fetchAirplaneLocation();
                 if (!airplaneLocation.equals(getCurrentPlaneLocation())) {
                     setCurrentLocation(airplaneLocation);
                     notifyLocationChanged(airplaneLocation);
@@ -132,9 +131,32 @@ public class MapModel {
         }
     }
 
-    private void fetchAirplaneLocation() {
+    private int countFetch = 0;
+
+    private Point fetchAirplaneLocation() {
+        final double x, y;
+
+        switch (countFetch++ % 4) {
+            case 0:
+                x = 1.5;
+                y = 1.5;
+                break;
+            case 1:
+                x = 1.7;
+                y = 2.2;
+                break;
+            case 2:
+                x = 2.6;
+                y = 2.3;
+                break;
+            default:
+                x = 2.9;
+                y = 1.1;
+                break;
+        }
+
         //TODO: implement how to get location
-        setCurrentLocation(new Point(2, 2));
+        return new Point(x, y);
     }
 
     ////// Event Handlers

@@ -1,5 +1,6 @@
 package sample.Map;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -86,6 +87,8 @@ public class MapController {
         }
         try {
             findMapItemViewByPoint(model.getEndPosition()).displayX();
+        } catch (NoSuchElementException e){}
+        try {
             findMapItemViewByPoint(model.getCurrentPlaneLocation()).displayAirplane();
         } catch (NoSuchElementException e){}
     }
@@ -97,7 +100,7 @@ public class MapController {
     }
 
     public void onAirplaneChangedLocation(Point newLocation) {
-        findMapItemViewByPoint(newLocation).displayAirplane();
+        Platform.runLater(this::redrawGridPane);
     }
 
     @FXML

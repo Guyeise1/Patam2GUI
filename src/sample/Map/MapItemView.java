@@ -1,12 +1,10 @@
 package sample.Map;
 
-import javafx.geometry.Pos;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 
 public class MapItemView extends Pane {
 
@@ -17,10 +15,12 @@ public class MapItemView extends Pane {
 
     private TextArea heightTextView;
 
-    private ImageView planeImageView;
+    private ImageView iconImageView;
 
-    final static String AIRPLANE_LOCATION = "file:airplaneLogo.png";
-
+    final static String AIRPLANE_LOCATION = "file:Images/airplaneLogo.png";
+    final static String X_LOCATION = "file:Images/x.png";
+    final static Image AIRPLANE_IMAGE = new Image(AIRPLANE_LOCATION);
+    final static Image X_IMAGE = new Image(X_LOCATION);
 
     public MapItemView(int column, int row) {
         this.column = column;
@@ -32,31 +32,43 @@ public class MapItemView extends Pane {
     private void createTextView() {
         this.heightTextView = new TextArea();
         this.heightTextView.setBackground(Background.EMPTY);
+        heightTextView.setText(text);
+        heightTextView.setPrefRowCount(3);
+        heightTextView.setPrefRowCount(1);
     }
 
     private void createImageView() {
-        this.planeImageView = new ImageView();
-        planeImageView.setImage(new Image(AIRPLANE_LOCATION));
+        this.iconImageView = new ImageView();
+        iconImageView.setFitHeight(50);
+        iconImageView.setFitWidth(50);
     }
 
     public void setText(String text){
         this.text = text;
+        heightTextView.setText(text);
         displayText();
-        //displayAirplane();
     }
 
     public void displayAirplane() {
         getChildren().clear();
-        planeImageView.setFitHeight(50);
-        planeImageView.setFitWidth(50);
-        getChildren().add(planeImageView);
+        iconImageView.setImage(AIRPLANE_IMAGE);
+        getChildren().add(iconImageView);
     }
 
     public void displayText() {
         getChildren().clear();
-        heightTextView.setText(text);
-        heightTextView.setPrefRowCount(3);
-        heightTextView.setPrefRowCount(1);
         getChildren().add(heightTextView);
+    }
+
+    public void displayX() {
+        getChildren().clear();
+        iconImageView.setFitHeight(50);
+        iconImageView.setFitWidth(50);
+        iconImageView.setImage(X_IMAGE);
+        getChildren().add(iconImageView);
+    }
+
+    public void clear() {
+        displayText();
     }
 }

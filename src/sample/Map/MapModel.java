@@ -24,8 +24,6 @@ public class MapModel {
 
     private Optional<ColorAndHeight[][]>  map;
 
-
-
     private List<Consumer<Point>> locationChangedListeners;
 
     private boolean shouldListenToAirplaneChanges;
@@ -39,12 +37,24 @@ public class MapModel {
         shouldListenToAirplaneChanges = false;
     }
 
+    //// Loading data from files
+
     public void loadMapFromFile(String fileName) throws IOException, VerifyError {
         List<List<Integer>> heigths = new ArrayList<>();
         String row;
         int max_height = 0;
 
         try(BufferedReader csvReader = new BufferedReader(new FileReader(fileName))) {
+
+            // TODO: Implement Retviving points from file.
+            final Point POINT_FROM_FILE = new Point(1, 1);
+            setStartPosition(POINT_FROM_FILE);
+            setCurrentLocation(POINT_FROM_FILE);
+
+            // TODO: Implement Retviving SQUARE SIZE from file
+            final double SQUARE_SIZE_FROM_FILE = 1;
+            setSquareSize(SQUARE_SIZE_FROM_FILE);
+
             while ((row = csvReader.readLine()) != null) {
                 List<Integer> heightsRow = Stream
                         .of(row.split(","))
@@ -55,56 +65,8 @@ public class MapModel {
                 heigths.add(heightsRow);
             }
         }
-        final Point POINT_FROM_FILE = new Point(1, 1);
-        setStartPosition(POINT_FROM_FILE);
-        setCurrentLocation(new Point(-1, -1));
         this.map = Optional.of(buildMatrixFromList(heigths, max_height));
         listenForAirplaneChanged();
-    }
-
-    public void addLocationChangedListener(Consumer<Point> locationChangedListener) {
-        synchronized (this) {
-            locationChangedListeners.add(locationChangedListener);
-        }
-    }
-
-    public void removeLocationChangedListener(Consumer<Point> locationChangedListener) {
-        synchronized (this) {
-            locationChangedListeners.remove(locationChangedListener);
-        }
-    }
-
-    public void notifyLocationChanged(Point newLocation) {
-        synchronized (this) {
-            for (Consumer<Point> locationListeners : this.locationChangedListeners) {
-                locationListeners.accept(newLocation);
-            }
-        }
-    }
-
-    public void listenForAirplaneChanged() {
-        shouldListenToAirplaneChanges = true;
-        new Thread(this::checkForAirplaneChangedLocation).start();
-    }
-
-    private void checkForAirplaneChangedLocation() {
-        try {
-            while (shouldListenToAirplaneChanges) {
-                Point airplaneLocation = fetchAirplaneLocation();
-                if (!airplaneLocation.equals(getCurrentPlaneLocation())) {
-                    setCurrentLocation(airplaneLocation);
-                    notifyLocationChanged(airplaneLocation);
-                }
-                Thread.sleep(250);
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private Point fetchAirplaneLocation() {
-        //TODO: implement how to get location
-        return new Point(1, 3);
     }
 
     private ColorAndHeight[][] buildMatrixFromList(List<List<Integer>> heigths, int maxHeight) throws VerifyError {
@@ -147,13 +109,68 @@ public class MapModel {
         };
     }
 
-    public void setStartPosition(Point point) {
-        this.currentPosition = Optional.of(point);
+    ////// Plane Location Handlers
+
+    public void listenForAirplaneChanged() {
+        shouldListenToAirplaneChanges = true;
+        new Thread(this::checkForAirplaneChangedLocation).start();
     }
 
+    private void checkForAirplaneChangedLocation() {
+        try {
+            while (shouldListenToAirplaneChanges) {
+                fetchAirplaneLocation();
+                Point airplaneLocation = getCurrentPlaneLocation();
+                if (!airplaneLocation.equals(getCurrentPlaneLocation())) {
+                    setCurrentLocation(airplaneLocation);
+                    notifyLocationChanged(airplaneLocation);
+                }
+                Thread.sleep(250);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void fetchAirplaneLocation() {
+        //TODO: implement how to get location
+        setCurrentLocation(new Point(2, 2));
+    }
+
+    ////// Event Handlers
+
+    public void addLocationChangedListener(Consumer<Point> locationChangedListener) {
+        synchronized (this) {
+            locationChangedListeners.add(locationChangedListener);
+        }
+    }
+
+    public void removeLocationChangedListener(Consumer<Point> locationChangedListener) {
+        synchronized (this) {
+            locationChangedListeners.remove(locationChangedListener);
+        }
+    }
+
+    public void notifyLocationChanged(Point newLocation) {
+        synchronized (this) {
+            for (Consumer<Point> locationListeners : this.locationChangedListeners) {
+                locationListeners.accept(newLocation);
+            }
+        }
+    }
+
+    ////// Getters and setters
+
+    public void setStartPosition(Point point) {
+        this.startPosition = Optional.of(point);
+    }
 
     public double getSquareSize() {
         return squareSize.orElseThrow();
+    }
+
+    public Point getStartPosition() {
+        return startPosition.orElseThrow();
     }
 
     public Point getCurrentPlaneLocation() {
@@ -168,10 +185,15 @@ public class MapModel {
         this.endPosition = Optional.of(end);
     }
 
+    public Point getEndPosition() {
+        return endPosition.orElseThrow();
+    }
 
     public void setCurrentLocation(Point currentLocation) {
         this.currentPosition = Optional.of(new Point(currentLocation.x, currentLocation.y));
     }
 
-
+    public void setSquareSize(double squareSize) {
+        this.squareSize = Optional.of(squareSize);
+    }
 }

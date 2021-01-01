@@ -63,16 +63,22 @@ public class MapModel {
     }
 
     public void addLocationChangedListener(Consumer<Point> locationChangedListener) {
-        locationChangedListeners.add(locationChangedListener);
+        synchronized (this) {
+            locationChangedListeners.add(locationChangedListener);
+        }
     }
 
     public void removeLocationChangedListener(Consumer<Point> locationChangedListener) {
-        locationChangedListeners.remove(locationChangedListener);
+        synchronized (this) {
+            locationChangedListeners.remove(locationChangedListener);
+        }
     }
 
     public void notifyLocationChanged(Point newLocation) {
-        for (Consumer<Point> locationListeners : this.locationChangedListeners) {
-            locationListeners.accept(newLocation);
+        synchronized (this) {
+            for (Consumer<Point> locationListeners : this.locationChangedListeners) {
+                locationListeners.accept(newLocation);
+            }
         }
     }
 
@@ -83,12 +89,14 @@ public class MapModel {
 
     private void checkForAirplaneChangedLocation() {
         try {
-            Point airplaneLocation = fetchAirplaneLocation();
-            if (!airplaneLocation.equals(getCurrentPlaneLocation())) {
-                setCurrentLocation(airplaneLocation);
-                notifyLocationChanged(airplaneLocation);
+            while (shouldListenToAirplaneChanges) {
+                Point airplaneLocation = fetchAirplaneLocation();
+                if (!airplaneLocation.equals(getCurrentPlaneLocation())) {
+                    setCurrentLocation(airplaneLocation);
+                    notifyLocationChanged(airplaneLocation);
+                }
+                Thread.sleep(250);
             }
-            Thread.sleep(250);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -127,8 +135,7 @@ public class MapModel {
 
     private Function<Integer, Color> buildColorFromHeightFunction(int maxHeight) {
         return height ->  {
-            double percentage = 1.0 * height / maxHeight;
-            percentage = 1 - percentage;
+            double percentage = 1.0 - 1.0 * height / maxHeight;
             int red = 255;
             int green = 255;
             if (percentage >= 0 && percentage <= 0.5) {

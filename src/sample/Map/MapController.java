@@ -58,6 +58,8 @@ public class MapController {
                 view.setBackground(new Background(new BackgroundFill(
                         (values[x][y].color), null, null)));
                 view.setOnMouseClicked(event -> onMapItemClicked(view, event));
+                view.setMaxWidth(map.getWidth() / values[0].length);
+                view.setMinHeight(map.getHeight() / values.length);
                 map.add(view, y, x);
             }
         }

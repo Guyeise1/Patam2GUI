@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane xmlns="http://javafx.com/javafx"
+    xmlns:fx="http://javafx.com/fxml"
+    fx:controller="sample.Map.MapController"
+    prefHeight="400.0" prefWidth="600.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="607.0" minWidth="10.0" prefWidth="277.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints maxHeight="385.0" minHeight="10.0" prefHeight="182.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="649.0" minHeight="10.0" prefHeight="598.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+        <children>
+            <GridPane>
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="299.0" minWidth="10.0" prefWidth="188.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="454.0" minWidth="10.0" prefWidth="204.0" />
+                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="454.0" minWidth="10.0" prefWidth="220.0" />
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                </rowConstraints>
+                <children>
+                    <Button mnemonicParsing="false" scaleX="2.0" scaleY="2.0" text="Connect" GridPane.halignment="CENTER" />
+                    <Button fx:id="loadDataButton" onAction="#onLoadButtonPressed" mnemonicParsing="false" scaleX="2.0" scaleY="2.0" text="Load data" GridPane.columnIndex="1" GridPane.halignment="CENTER" >
+                    </Button>
+                    <Button mnemonicParsing="false" scaleX="2.0" scaleY="2.0" text="Calculate path" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
+                </children>
+            </GridPane>
+            <GridPane fx:id="map" gridLinesVisible="true" GridPane.rowIndex="1">
+            </GridPane>
+        </children>
+    </GridPane>
+
+

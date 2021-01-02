@@ -5,10 +5,7 @@ import sample.StaticClasses.ColorAndHeight;
 import sample.StaticClasses.Point;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -188,19 +185,19 @@ public class MapModel {
     }
 
     public double getSquareSize() {
-        return squareSize.orElseThrow();
+        return squareSize.orElseThrow(()->new NoSuchElementException("No value present"));
     }
 
     public Point getStartPosition() {
-        return startPosition.orElseThrow();
+        return startPosition.orElseThrow(()->new NoSuchElementException("No value present"));
     }
 
     public Point getCurrentPlaneLocation() {
-        return currentPosition.orElseThrow();
+        return currentPosition.orElseThrow(()->new NoSuchElementException("No value present"));
     }
 
     public ColorAndHeight[][] getColorMap() {
-        return map.orElseThrow();
+        return map.orElseThrow(()->new NoSuchElementException("No value present"));
     }
 
     public void setEndPosition(Point end) {
@@ -208,7 +205,7 @@ public class MapModel {
     }
 
     public Point getEndPosition() {
-        return endPosition.orElseThrow();
+        return endPosition.orElseThrow(()->new NoSuchElementException("No value present"));
     }
 
     public void setCurrentLocation(Point currentLocation) {

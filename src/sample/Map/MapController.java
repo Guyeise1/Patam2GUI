@@ -32,7 +32,7 @@ public class MapController {
 
     @FXML
     private void onLoadButtonPressed(ActionEvent event) {
-        final String CSV_FILE_LOCATION = "matrix.csv"; // TODO: Should input file location from user. until then, from csv.
+        final String CSV_FILE_LOCATION = "Data/Honolulu.csv"; // TODO: Should input file location from user. until then, from csv.
         if(loadDataFromFile(CSV_FILE_LOCATION)) {
             ColorAndHeight[][] matrix = model.getColorMap();
             updateGridPane(matrix);

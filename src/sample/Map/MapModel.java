@@ -32,69 +32,86 @@ public class MapModel {
         this.endPosition = Optional.empty();
         locationChangedListeners = new ArrayList<>();
         shouldListenToAirplaneChanges = false;
+        Thread t = new Thread();
+        t.stop();
     }
 
     //// Loading data from files
 
     public void loadMapFromFile(String fileName) throws IOException, VerifyError {
-        List<List<Integer>> heigths = new ArrayList<>();
+        List<List<Double>> heigths = new ArrayList<>();
         String row;
-        int max_height = 0;
+        double maxHeight = 0;
+        int maxCount = 0;
 
         try(BufferedReader csvReader = new BufferedReader(new FileReader(fileName))) {
 
             // TODO: Implement Retviving points from file.
-            final Point POINT_FROM_FILE = new Point(1, 1);
-            setStartPosition(POINT_FROM_FILE);
-            setCurrentLocation(POINT_FROM_FILE);
+            //final Point POINT_FROM_FILE = new Point(1, 1);
+
+            String firstLine = csvReader.readLine();
+            String[] quardinates = firstLine.split(",",3);
+            double x = Double.parseDouble(quardinates[0]);
+            double y = Double.parseDouble(quardinates[1]);
+            setStartPosition(new Point(x,y));
+            setCurrentLocation(getStartPosition());
 
             // TODO: Implement Retviving SQUARE SIZE from file
-            final double SQUARE_SIZE_FROM_FILE = 1;
-            setSquareSize(SQUARE_SIZE_FROM_FILE);
+            String secondLine = csvReader.readLine();
+            String[] squareSizeArray = firstLine.split(",", 2);
+            //final double SQUARE_SIZE_FROM_FILE = 1;
+            setSquareSize(Double.parseDouble(squareSizeArray[0]));
 
             while ((row = csvReader.readLine()) != null) {
-                List<Integer> heightsRow = Stream
+                List<Double> heightsRow = Stream
                         .of(row.split(","))
                         .filter(number -> !number.isEmpty())
-                        .map(Integer::parseInt)
+                        .map(Double::parseDouble)
                         .collect(Collectors.toList());
-                max_height = Math.max(max_height, Collections.max(heightsRow));
+                maxHeight = Math.max(maxHeight, Collections.max(heightsRow));
+                maxCount = Math.max(maxCount, heightsRow.size());
                 heigths.add(heightsRow);
             }
         }
-        this.map = Optional.of(buildMatrixFromList(heigths, max_height));
+        this.map = Optional.of(buildMatrixFromList(heigths, maxHeight, maxCount));
         listenForAirplaneChanged();
     }
 
-    private ColorAndHeight[][] buildMatrixFromList(List<List<Integer>> heigths, int maxHeight) throws VerifyError {
-        verifyMatrix(heigths);
+    private ColorAndHeight[][] buildMatrixFromList(List<List<Double>> heigths, double maxHeight, int maxCount) throws VerifyError {
+        verifyMatrix(heigths, maxCount);
         int d_1 = heigths.size();
         int d_2 = heigths.get(0).size();
         ColorAndHeight[][] matrix = new ColorAndHeight[d_1][d_2];
-        Function<Integer, Color> heightToColor = buildColorFromHeightFunction(maxHeight);
+        Function<Double, Color> heightToColor = buildColorFromHeightFunction(maxHeight);
         for (int x = 0; x < d_1; x++) {
             matrix[x] = new ColorAndHeight[d_2];
             for (int y = 0; y < d_2; y++) {
-                int height = heigths.get(x).get(y);
+                double height = heigths.get(x).get(y);
                 matrix[x][y] = new ColorAndHeight(heightToColor.apply(height), height);
             }
         }
         return matrix;
     }
 
-    private void verifyMatrix(List<List<Integer>> heigths) throws VerifyError {
+    private void verifyMatrix(List<List<Double>> heigths, int maxCount) throws VerifyError {
         if (heigths == null || heigths.isEmpty()) {
             throw new VerifyError("No heights found");
         }
-        int d_2_size = heigths.get(0).size();
-        if(heigths.stream().anyMatch(listHeights -> listHeights.size() != d_2_size)) {
-            throw new VerifyError("Not all rows are at the same size");
+        final double DEFAULT_HEIGHT = 0;
+        for (int i = 0; i < heigths.size(); i ++) {
+            for (int diff = maxCount - heigths.get(i).size(); diff > 0; diff--) {
+                heigths.get(i).add(DEFAULT_HEIGHT);
+            }
         }
+//        //int d_2_size = heigths.get(0).size();
+//        if(heigths.stream().anyMatch(listHeights -> listHeights.size() != d_2_size)) {
+//            throw new VerifyError("Not all rows are at the same size");
+//        }
     }
 
-    private Function<Integer, Color> buildColorFromHeightFunction(int maxHeight) {
+    private Function<Double, Color> buildColorFromHeightFunction(double maxHeight) {
         return height ->  {
-            double percentage = 1.0 - 1.0 * height / maxHeight;
+            double percentage = 1.0 - height / maxHeight;
             int red = 255;
             int green = 255;
             if (percentage >= 0 && percentage <= 0.5) {
@@ -131,29 +148,8 @@ public class MapModel {
     private int countFetch = 0;
 
     private Point fetchAirplaneLocation() {
-        final double x, y;
-
-        switch (countFetch++ % 4) {
-            case 0:
-                x = 1.5;
-                y = 1.5;
-                break;
-            case 1:
-                x = 1.7;
-                y = 2.2;
-                break;
-            case 2:
-                x = 2.6;
-                y = 2.3;
-                break;
-            default:
-                x = 2.9;
-                y = 1.1;
-                break;
-        }
-
         //TODO: implement how to get location
-        return new Point(x, y);
+        return getCurrentPlaneLocation();
     }
 
     ////// Event Handlers

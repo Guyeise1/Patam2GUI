@@ -5,9 +5,9 @@ import javafx.scene.paint.Color;
 public class ColorAndHeight {
 
     public Color color;
-    public int height;
+    public double height;
 
-    public ColorAndHeight(Color color, int height) {
+    public ColorAndHeight(Color color, double height) {
         this.color = color;
         this.height = height;
     }
@@ -16,7 +16,7 @@ public class ColorAndHeight {
     public String toString() {
         return "Item{" +
                 height + '\'' +
-                "" + color +
+                color +
                 '}';
     }
 }

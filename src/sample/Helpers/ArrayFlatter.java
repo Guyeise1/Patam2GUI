@@ -65,6 +65,4 @@ public class ArrayFlatter {
         list.clear();
         list = null;
     }
-
-
 }

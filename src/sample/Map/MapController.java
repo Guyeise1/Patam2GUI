@@ -66,7 +66,7 @@ public class MapController {
             for (int y = 0; y < values[0].length; y++) {
                 MapItemView view = new MapItemView(x, y);
                 cells[x][y] = view;
-                view.setText(values[x][y].height + "");
+                view.setText((int)values[x][y].height + "");
                 view.setBackground(new Background(new BackgroundFill(
                         (values[x][y].color), null, null)));
                 view.setOnMouseClicked(event -> onMapItemClicked(view, event));

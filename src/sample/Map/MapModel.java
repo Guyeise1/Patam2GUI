@@ -3,6 +3,8 @@ package sample.Map;
 import javafx.scene.paint.Color;
 import sample.StaticClasses.ColorAndHeight;
 import sample.StaticClasses.Point;
+import simulator.NetworkCommands;
+import simulator.Parameters;
 
 import java.io.*;
 import java.util.*;
@@ -10,6 +12,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static simulator.Parameters.SimulatorParam.*;
 
 public class MapModel {
 
@@ -32,8 +36,11 @@ public class MapModel {
         this.endPosition = Optional.empty();
         locationChangedListeners = new ArrayList<>();
         shouldListenToAirplaneChanges = false;
-        Thread t = new Thread();
-        t.stop();
+        try {
+            NetworkCommands.getInstance().connect("Guy-VM", 5402);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //// Loading data from files
@@ -54,6 +61,8 @@ public class MapModel {
             double x = Double.parseDouble(quardinates[0]);
             double y = Double.parseDouble(quardinates[1]);
             setStartPosition(new Point(x,y));
+            Parameters.setDoubleValue(LONGITUDE_DEG, x);
+            Parameters.setDoubleValue(LATITUDE_DEG, y);
             setCurrentLocation(getStartPosition());
 
             // TODO: Implement Retviving SQUARE SIZE from file
@@ -148,8 +157,9 @@ public class MapModel {
     private int countFetch = 0;
 
     private Point fetchAirplaneLocation() {
-        //TODO: implement how to get location
-        return getCurrentPlaneLocation();
+        double x = Parameters.getDoubleValue(LONGITUDE_DEG).orElseThrow(() -> new NoSuchElementException("Error getting the x axis"));
+        double y = Parameters.getDoubleValue(Parameters.SimulatorParam.LATITUDE_DEG).orElseThrow(() -> new NoSuchElementException("Error getting the y axis"));
+        return new Point(x,y);
     }
 
     ////// Event Handlers

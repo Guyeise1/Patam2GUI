@@ -55,11 +55,10 @@ public class ArrayFlatter {
     }
 
     private static void clearList(List<?> list) {
-        for (int i =0; i < list.size(); i++) {
+        for (int i = 0; i < list.size(); i++) {
             if (list.get(i) instanceof List) {
-                List<?> innerList = (List<?>) list.get(0);
+                List<?> innerList = (List<?>) list.get(i);
                 clearList(innerList);
-                innerList = null;
             }
         }
         list.clear();

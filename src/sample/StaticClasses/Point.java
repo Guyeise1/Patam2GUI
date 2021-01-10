@@ -29,4 +29,11 @@ public class Point {
     public int hashCode() {
         return Objects.hash(x, y);
     }
+
+
+    public static double distance(Point a, Point b) {
+        double x = a.x - b.x;
+        double y = a.y - b.y;
+        return Math.sqrt(x * x + y * y);
+    }
 }

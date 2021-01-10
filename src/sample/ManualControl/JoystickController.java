@@ -1,8 +1,10 @@
 package sample.ManualControl;
 
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Slider;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
@@ -20,16 +22,31 @@ public class JoystickController{
     @FXML
     private StackPane joystickPane;
 
-    public double aileronRatio;
-
-    public double elevatorRatio;
-
     @FXML
     private Slider throttleSlider;
 
     @FXML
     private Slider rudderSlider;
 
+    private DoubleProperty aileronRatio = new SimpleDoubleProperty();
+
+    private DoubleProperty elevatorRatio = new SimpleDoubleProperty();
+
+    public DoubleProperty getRudderValue() {
+        return rudderSlider.valueProperty();
+    }
+
+    public DoubleProperty getThrottleValue() {
+        return throttleSlider.valueProperty();
+    }
+
+    public DoubleProperty getAileronValue() {
+        return aileronRatio;
+    }
+
+    public DoubleProperty getElevatorRatio() {
+        return elevatorRatio;
+    }
 
     @FXML
     private void onJoystickMoved(MouseEvent event) {
@@ -39,8 +56,8 @@ public class JoystickController{
         if (Point.distance(circleCenter, joystickPoint) <= circleRadius) {
             joystickCircle.setCenterX(joystickPoint.x);
             joystickCircle.setCenterY(joystickPoint.y);
-            this.aileronRatio = (joystickPoint.x - circleCenter.x) / circleRadius;
-            this.elevatorRatio = (joystickPoint.y - circleCenter.y) / circleRadius;
+            this.aileronRatio.set((joystickPoint.x - circleCenter.x) / circleRadius);
+            this.elevatorRatio.set((joystickPoint.y - circleCenter.y) / circleRadius);
         }
     }
 

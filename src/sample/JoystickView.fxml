@@ -7,21 +7,29 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.Circle?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-        xmlns:fx="http://javafx.com/fxml"
-        fx:controller="sample.ManualControl.JoystickController">
-
-<Circle fx:id="circleArea"
-    centerX="200"
-    centerY="1200"
-    radius="100"
-    fill="gray"/>
-<Circle
-    fx:id="joystickCircle"
-    centerX="200"
-    centerY="1200"
-            radius="10"
-            fill="white"
-            onMouseDragged="#onJoystickMoved"
-            onMouseReleased="#onJoystickReleased"/>
-</AnchorPane>
+<?import javafx.scene.text.Text?>
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="sample.ManualControl.JoystickController"
+          prefHeight="500" prefWidth="200">
+    <Pane GridPane.rowIndex="0">
+        <Circle fx:id="circleArea"
+        radius="100"
+                centerX="100"
+                centerY="200"
+        fill="gray"/>
+        <Circle
+                fx:id="joystickCircle"
+                centerX="100"
+                centerY="200"
+                radius="10"
+                fill="white"
+                onMouseDragged="#onJoystickMoved"
+                onMouseReleased="#onJoystickReleased"/>
+</Pane>
+    <Text text="throttle" GridPane.rowIndex="1"></Text>
+    <Slider fx:id="throttleSlider" GridPane.rowIndex="2" min="0" max="1" showTickLabels="true" showTickMarks="true">
+    </Slider>
+    <Text text="rudder" GridPane.rowIndex="3"></Text>
+    <Slider fx:id="rudderSlider" GridPane.rowIndex="4" min="-1" max="1" showTickLabels="true" showTickMarks="true" ></Slider>
+</GridPane>

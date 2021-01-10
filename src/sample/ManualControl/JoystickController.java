@@ -2,8 +2,10 @@ package sample.ManualControl;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.fxml.FXML;
+import javafx.scene.control.Slider;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import sample.StaticClasses.Point;
 
@@ -15,9 +17,19 @@ public class JoystickController{
     @FXML
     private Circle joystickCircle;
 
+    @FXML
+    private StackPane joystickPane;
+
     public double aileronRatio;
 
     public double elevatorRatio;
+
+    @FXML
+    private Slider throttleSlider;
+
+    @FXML
+    private Slider rudderSlider;
+
 
     @FXML
     private void onJoystickMoved(MouseEvent event) {

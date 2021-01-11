@@ -68,4 +68,11 @@ public class JoystickController{
         joystickCircle.setCenterY(circleCenter.y);
     }
 
+    @FXML
+    private void onThrottleSlide(DragEvent event) {
+    }
+
+    @FXML
+    private void onRudderSlide(DragEvent event) {
+    }
 }

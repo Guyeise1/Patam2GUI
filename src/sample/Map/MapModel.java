@@ -1,6 +1,7 @@
 package sample.Map;
 
 import javafx.scene.paint.Color;
+import sample.Helpers.ArrayFlatter;
 import sample.StaticClasses.ColorAndHeight;
 import sample.StaticClasses.Point;
 import simulator.NetworkCommands;
@@ -88,6 +89,7 @@ public class MapModel {
 
     private ColorAndHeight[][] buildMatrixFromList(List<List<Double>> heigths, double maxHeight, int maxCount) throws VerifyError {
         verifyMatrix(heigths, maxCount);
+        heigths = ArrayFlatter.decreaseMatrix(heigths);
         int d_1 = heigths.size();
         int d_2 = heigths.get(0).size();
         ColorAndHeight[][] matrix = new ColorAndHeight[d_1][d_2];

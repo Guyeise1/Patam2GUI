@@ -4,7 +4,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Paint;
 
 public class MapItemView extends Pane {
 
@@ -22,9 +24,11 @@ public class MapItemView extends Pane {
     final static Image AIRPLANE_IMAGE = new Image(AIRPLANE_LOCATION);
     final static Image X_IMAGE = new Image(X_LOCATION);
 
-    public MapItemView(int column, int row) {
+    public MapItemView(int column, int row, int minWidth, int minHeight) {
         this.column = column;
         this.row = row;
+        setMinWidth(minWidth);
+        setMinHeight(minHeight);
         createImageView();
         createTextView();
     }
@@ -39,8 +43,8 @@ public class MapItemView extends Pane {
 
     private void createImageView() {
         this.iconImageView = new ImageView();
-        iconImageView.setFitHeight(50);
-        iconImageView.setFitWidth(50);
+        iconImageView.setFitHeight(super.getMinHeight());
+        iconImageView.setFitWidth(super.getMinHeight());
     }
 
     public void setText(String text){
@@ -60,6 +64,11 @@ public class MapItemView extends Pane {
         getChildren().add(heightTextView);
     }
 
+    public void markAsViaSquare() {
+        String blue = "#0000FF";
+        setBackground(new Background(new BackgroundFill(Paint.valueOf(blue), null, null)));
+    }
+
     public void displayX() {
         getChildren().clear();
         iconImageView.setFitHeight(50);
@@ -69,6 +78,7 @@ public class MapItemView extends Pane {
     }
 
     public void clear() {
+        setBackground(Background.EMPTY);
         displayText();
     }
 }

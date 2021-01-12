@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ArrayFlatter {
 
-    public static final double DECREASE_RATIO = 8;
+    public static final double DECREASE_RATIO = 26;
 
     public static List<List<Double>> decreaseMatrix(List<List<Double>> original) {
         List<List<List<Double>>> matrixOfCubes = groupMatrixToMatrixCubes(original);

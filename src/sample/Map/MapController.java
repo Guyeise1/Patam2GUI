@@ -11,11 +11,13 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
 import sample.Helpers.AlertHelper;
+import sample.Helpers.ArrayFlatter;
 import sample.StaticClasses.ColorAndHeight;
 import sample.StaticClasses.Point;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
+import java.util.concurrent.CompletableFuture;
 
 
 public class MapController {
@@ -64,14 +66,13 @@ public class MapController {
         for (int x = 0; x < values.length; x ++) {
             cells[x] = new MapItemView[values[0].length];
             for (int y = 0; y < values[0].length; y++) {
-                MapItemView view = new MapItemView(x, y);
+                MapItemView view = new MapItemView(x, y,
+                        (int)map.getWidth() / values[0].length, (int)map.getHeight() / values.length);
                 cells[x][y] = view;
                 view.setText((int)values[x][y].height + "");
                 view.setBackground(new Background(new BackgroundFill(
                         (values[x][y].color), null, null)));
                 view.setOnMouseClicked(event -> onMapItemClicked(view, event));
-                view.setMinWidth(map.getWidth() / values[0].length);
-                view.setMinHeight(map.getHeight() / values.length);
                 map.add(view, y, x);
             }
         }
@@ -83,6 +84,8 @@ public class MapController {
         for (int x = 0; x < values.length; x ++) {
             for (int y = 0; y < values[0].length; y++) {
                 cells[x][y].clear();
+                cells[x][y].setBackground(new Background(new BackgroundFill(
+                        (values[x][y].color), null, null)));
             }
         }
         try {
@@ -114,6 +117,18 @@ public class MapController {
         double endX = ( view.column + 0.5 ) * model.getSquareSize() + model.getStartPosition().x;
         double endY = ( view.row + 0.5 ) * model.getSquareSize() + model.getStartPosition().y;
         model.setEndPosition(new Point(endX, endY));
-        redrawGridPane();
+        calculatePath(model.getStartPosition(), model.getEndPosition());
+        //redrawGridPane();
+    }
+
+    private void calculatePath(Point geoStart, Point geoEnd) {
+        model.calculateShortestPathBetween(geoStart, geoEnd).thenAccept(pointsInTheMiddle -> {
+            Platform.runLater(()-> {
+                redrawGridPane();
+                for (Point mapPoint : pointsInTheMiddle) {
+                    cells[(int)mapPoint.x][(int)mapPoint.y].markAsViaSquare();
+                }
+            });
+        });
     }
 }

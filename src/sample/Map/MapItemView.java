@@ -1,21 +1,22 @@
 package sample.Map;
 
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 
-public class MapItemView extends Pane {
+public class MapItemView extends BorderPane {
 
     public final int column;
     public final int row;
 
     public String text;
 
-    private TextArea heightTextView;
+    private Text heightTextView;
 
     private ImageView iconImageView;
 
@@ -31,14 +32,13 @@ public class MapItemView extends Pane {
         setMinHeight(minHeight);
         createImageView();
         createTextView();
+        super.setBorder(new Border(new BorderStroke(Color.BLACK,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0.5))));
     }
 
     private void createTextView() {
-        this.heightTextView = new TextArea();
-        this.heightTextView.setBackground(Background.EMPTY);
+        this.heightTextView = new Text();
         heightTextView.setText(text);
-        heightTextView.setPrefRowCount(3);
-        heightTextView.setPrefRowCount(1);
     }
 
     private void createImageView() {
@@ -61,7 +61,7 @@ public class MapItemView extends Pane {
 
     public void displayText() {
         getChildren().clear();
-        getChildren().add(heightTextView);
+        super.setBottom(heightTextView);
     }
 
     public void markAsViaSquare() {

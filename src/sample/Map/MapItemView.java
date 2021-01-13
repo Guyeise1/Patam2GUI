@@ -61,7 +61,7 @@ public class MapItemView extends BorderPane {
 
     public void displayText() {
         getChildren().clear();
-        super.setBottom(heightTextView);
+        super.setCenter(heightTextView);
     }
 
     public void markAsViaSquare() {

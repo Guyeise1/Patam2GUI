@@ -4,6 +4,7 @@ import javafx.scene.paint.Color;
 import sample.Helpers.ArrayFlatter;
 import sample.StaticClasses.ColorAndHeight;
 import sample.StaticClasses.Point;
+import simulator.DefaultConfiguration;
 import simulator.NetworkCommands;
 import simulator.Parameters;
 
@@ -38,7 +39,7 @@ public class MapModel {
         locationChangedListeners = new ArrayList<>();
         shouldListenToAirplaneChanges = false;
         try {
-            NetworkCommands.getInstance().connect("Guy-VM", 5402);
+            NetworkCommands.getInstance().connect(DefaultConfiguration.DEFAULT_SIMULATOR_SERVER, DefaultConfiguration.DEFAULT_SIMULATOR_SERVER_PORT);
         } catch (IOException e) {
             e.printStackTrace();
         }

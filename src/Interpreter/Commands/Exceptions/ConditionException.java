@@ -1,4 +1,4 @@
 package Interpreter.Commands.Exceptions;
 
-public class ConditionException extends Exception {
+public class ConditionException extends Exception{
 }

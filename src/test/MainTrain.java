@@ -4,6 +4,7 @@ import Interpreter.Commands.Exceptions.*;
 import Interpreter.Commands.Fundation.CodeBlock;
 import Interpreter.Commands.Fundation.Command;
 import Interpreter.Commands.Fundation.ConditionalCommand;
+import Interpreter.Commands.util.CreateVariableCommand;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
@@ -18,6 +19,50 @@ public class MainTrain {
 		}
 	}
 
+	private static void testCodeBlock() {
+		String code = "";
+		code += "var x=3\n";
+		// code += "x=4\n"; // Not working
+		code += "while x < 5 {\n";
+		code += "	if 2 < 3 {\n";
+		code += "		return 5\n";
+		code += "	}\n";
+		code += "	return 2\n";
+		code += "	return 1\n";
+		code += "}\n";
+		code += "return 2";
+
+		CodeBlock x = new CodeBlock(code);
+
+		hardPop(x);
+	}
+	public static void testMain(String[] args)  {
+		try {
+			Command.parse("return 3 * 5 - 8+2").execute();
+		} catch (CommandNotFoundException e) {
+			System.out.println("command not found");
+		} catch (InvalidArgumentsException e) {
+			System.out.println("impossible arguments");
+			System.out.println(e.getMessage());
+		} catch (NoCommandsLeftException e) {
+			e.printStackTrace();
+		} catch (InterpreterException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (InvalidConditionFormatException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (CalculateException e) {
+			e.printStackTrace();
+		}
+		System.out.println("done");
+	}
 
 	public static void prodMain(String[] args) {
 		Random r=new Random();
@@ -32,8 +77,6 @@ public class MainTrain {
 		
 		if(MyInterpreter.interpret(test1)!=rand*5-(8+2))
 			System.out.println("failed test1 (-20)");
-		else
-			System.out.println("passed test 1");
 
 		String[] test2={
 				"var x",	
@@ -44,8 +87,6 @@ public class MainTrain {
 
 		if(MyInterpreter.interpret(test2)!=rand+3)
 			System.out.println("failed test2 (-20)");
-		else
-			System.out.println("passed test 2");
 		String[] test3={
 				"openDataServer "+(port+1)+" 10",
 				"connect 127.0.0.1 "+port,
@@ -57,12 +98,8 @@ public class MainTrain {
 				"return y"
 		};
 
-		int weGot = MyInterpreter.interpret(test3);
-		System.out.println("we Got : " +weGot);
-		if(weGot!=rand*2)
+		if(MyInterpreter.interpret(test3)!=rand*2)
 			System.out.println("failed test3 (-20)");
-		else
-			System.out.println("passed test 3");
 		System.out.println("simX: "+sim.simX+ " simY: "+sim.simY+ " simZ: "+sim.simZ);
 		String[] test4={
 				"openDataServer "+ (port+1)+" 10",
@@ -75,13 +112,11 @@ public class MainTrain {
 				"return x+y*z"	
 		};
 
-		weGot = MyInterpreter.interpret(test4);
+		int weGot = MyInterpreter.interpret(test4);
 		System.out.println("We got: " + weGot);
 		System.out.println("He got: " + String.valueOf(sim.simX+sim.simY*sim.simZ));
 		if(weGot!=sim.simX+sim.simY*sim.simZ)
 			System.out.println("failed test4 (-20)");
-		else
-			System.out.println("passed test 4");
 
 		String[] test5={
 				"var x = 0",
@@ -95,11 +130,27 @@ public class MainTrain {
 		
 		if(MyInterpreter.interpret(test5)!=rand+2*5)
 			System.out.println("failed test5 (-20)");
-		else
-			System.out.println("passed test 5");
+
 
 		sim.close();
 		System.out.println("done");
+	}
+
+	private static void hardPop(CodeBlock cb) {
+		while(!cb.isEmpty()){
+			try {
+				Command<?> pop = cb.pop();
+				if(pop instanceof CreateVariableCommand){
+					pop.execute();
+				}
+				if(pop instanceof ConditionalCommand) {
+					hardPop(((ConditionalCommand) pop).getCodeBlock());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 	}
 
 

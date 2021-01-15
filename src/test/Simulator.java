@@ -32,10 +32,12 @@ public class Simulator {
 				while(!stop){
 					out.println(simX+","+simY+","+simZ);
 					out.flush();
+					try {Thread.sleep(100);} catch (InterruptedException e1) {}
 				}
 				out.close();
 				interpreter.close();
 			} catch (IOException e) {
+				try {Thread.sleep(1000);} catch (InterruptedException e1) {}
 			}
 		}
 	}

@@ -6,7 +6,7 @@ public class ParseException extends InvalidArgumentsException {
         super(message);
     }
 
-    public ParseException() {
+    public ParseException(){
         super();
     }
 

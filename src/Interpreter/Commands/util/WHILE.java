@@ -8,7 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 public class WHILE extends ConditionalCommand {
     @Override
     public Void execute() throws CommandNotFoundException, InstantiationException, InvocationTargetException, NoSuchMethodException, InvalidArgumentsException, IllegalAccessException, InterpreterException, InvalidConditionFormatException, NoCommandsLeftException, CalculateException {
-        while (this.getCondition().calculate()) {
+        while(this.getCondition().calculate()) {
             this.getCodeBlock().execute();
         }
 

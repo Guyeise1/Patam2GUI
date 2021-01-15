@@ -4,8 +4,6 @@ import Interpreter.Commands.Exceptions.InvalidArgumentsException;
 
 public abstract class UnaryCommand<T> extends Command<T> {
 
-    String commandArgument;
-
     public UnaryCommand() {
         super();
     }
@@ -13,6 +11,8 @@ public abstract class UnaryCommand<T> extends Command<T> {
     public UnaryCommand(String commandName) {
         super(commandName);
     }
+
+    String commandArgument;
 
     @Override
     public void setArgs(String... args) throws InvalidArgumentsException {
@@ -33,11 +33,11 @@ public abstract class UnaryCommand<T> extends Command<T> {
 
     }
 
-    public String getCommandArgument() {
-        return commandArgument;
-    }
-
     protected void setCommandArgument(String commandArgument) {
         this.commandArgument = commandArgument;
+    }
+
+    public String getCommandArgument() {
+        return commandArgument;
     }
 }

@@ -1,7 +1,7 @@
 package Interpreter.Network;
 
+import Interpreter.Commands.Fundation.Variables;
 import Interpreter.Commands.util.OPENDATASERVER;
-import Interpreter.Variables.Fundation.VariableManager;
 import test.MyInterpreter;
 
 import java.io.IOException;
@@ -14,14 +14,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Server {
 
-    private static Server instance;
     private int port;
     private AtomicBoolean isRunning = new AtomicBoolean(false);
-    private CompletableFuture ser;
 
-    private Server() {
-    }
+    private Server() {}
 
+    private static Server instance;
     public static Server getInstance() {
         if (instance == null) {
             instance = new Server();
@@ -30,23 +28,23 @@ public class Server {
     }
 
     public void start() {
-        ser = CompletableFuture.runAsync(() -> {
+        CompletableFuture.runAsync(() -> {
             isRunning.set(true);
             try (ServerSocket server = new ServerSocket()) {
                 server.bind(new InetSocketAddress("127.0.0.1", OPENDATASERVER.port));
                 Socket client = server.accept();
                 try (InputStream inputStream = client.getInputStream()) {
-                    do {
+                    while (isRunning.get()) {
                         try {
                             byte[] buffer = new byte[1024];
                             int len = inputStream.read(buffer);
                             String data = new String(buffer, 0, len);
                             parseData(data);
-                            System.out.println("Server got: " + data);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                    } while (isRunning.get());
+                    }
+                    server.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -63,16 +61,29 @@ public class Server {
     }
 
     private void parseData(String data) {
-        VariableManager variableManager = MyInterpreter.getInstance().getVariablesFactory();
-        variableManager.writeLock().lock();
-        try {
-            String[] vars = data.split("\r\n", 2)[0].split(",");
-            variableManager.setValue("simX", Double.parseDouble(vars[0]));
-            variableManager.setValue("simY", Double.parseDouble(vars[1]));
-            variableManager.setValue("simZ", Double.parseDouble(vars[2]));
-        } finally {
-            variableManager.writeLock().unlock();
+        String[] vars = data.split(",");
+        Variables variablesFactory = MyInterpreter.getInstance().getVariablesFactory();
+
+        if(!variablesFactory.containsVariable("simX")) {
+            variablesFactory.createVariable("simX");
         }
+        double simX =  Double.parseDouble(vars[0]);
+        variablesFactory.assignValue("simX", Double.parseDouble(vars[0]));
+        System.out.println("simX set to: " +simX);
+
+        if(!variablesFactory.containsVariable("simY")) {
+            variablesFactory.createVariable("simY");
+        }
+        double simY =  Double.parseDouble(vars[1]);
+        variablesFactory.assignValue("simY", Double.parseDouble(vars[1]));
+        System.out.println("simY set to: " +simY);
+
+        if(!variablesFactory.containsVariable("simZ")) {
+            variablesFactory.createVariable("simZ");
+        }
+        double simZ =  Double.parseDouble(vars[2]);
+        variablesFactory.assignValue("simZ", Double.parseDouble(vars[2]));
+        System.out.println("simZ set to: " +simZ);
     }
 
     public AtomicBoolean getIsRunning() {

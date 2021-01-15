@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="780.0" prefWidth="1819.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.271">
+<GridPane gridLinesVisible="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="780.0" prefWidth="1819.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.271" fx:controller="sample.Code.CodeController">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -27,12 +27,12 @@
             <RowConstraints maxHeight="608.0" minHeight="10.0" prefHeight="608.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <RadioButton mnemonicParsing="false" text="Auto Pilot" GridPane.halignment="CENTER">
+            <RadioButton fx:id="radioButtonAutoPilot"  onAction="#radioButtonAutoPilotClick" mnemonicParsing="false" text="Auto Pilot" GridPane.halignment="CENTER">
                <font>
                   <Font size="70.0" />
                </font>
             </RadioButton>
-            <TextArea prefHeight="200.0" prefWidth="587.0" GridPane.rowIndex="1" />
+            <TextArea fx:id="textAreaCode" prefHeight="200.0" prefWidth="587.0" GridPane.rowIndex="1" />
          </children>
       </GridPane>
        <fx:include source="MapView.fxml"></fx:include>
@@ -45,8 +45,7 @@
           <RowConstraints maxHeight="668.0" minHeight="10.0" prefHeight="605.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <RadioButton GridPane.rowIndex="0" mnemonicParsing="false" text="Manual" GridPane.halignment="CENTER"
-                         >
+            <RadioButton GridPane.rowIndex="0" mnemonicParsing="false" text="Manual" GridPane.halignment="CENTER">
                <font>
                   <Font size="70.0" />
                </font>

@@ -10,13 +10,14 @@ import java.util.Map;
 public class CommandTranslator {
     private static CommandTranslator instance;
 
-    private final Map<String, Class<? extends Command<?>>> commands;
+    private Map<String, Class<? extends  Command<?>>> commands;
 
 
     private CommandTranslator() {
         this.commands = new HashMap<>();
         this.commands.put("return", RETURN.class);
-        this.commands.put("while", WHILE.class);
+        this.commands.put("var", CreateVariableCommand.class);
+        this.commands.put("while",WHILE.class);
         this.commands.put("if", IF.class);
         this.commands.put("openDataServer", OPENDATASERVER.class);
         this.commands.put("connect", CONNECT.class);
@@ -25,7 +26,7 @@ public class CommandTranslator {
     }
 
     public static CommandTranslator getInstance() {
-        if (instance == null) {
+        if(instance == null) {
             instance = new CommandTranslator();
         }
 
@@ -35,11 +36,12 @@ public class CommandTranslator {
     public Class<? extends Command<?>> translate(String commandName) throws CommandNotFoundException {
         commandName = commandName.replace("\t", "");
 
-        if (this.commands.containsKey(commandName)) {
+        if(this.commands.containsKey(commandName)){
             return commands.get(commandName);
-        } else if (tryParseDouble(commandName)) {
+        }
+        else if(tryParseDouble(commandName)){
             return NUMBER.class;
-        } else if (commandName.isEmpty()) {
+        }else if (commandName.isEmpty()){
             return NOP.class;
         }
         throw new CommandNotFoundException("Command: " + commandName + " is not a valid command");
@@ -54,7 +56,7 @@ public class CommandTranslator {
     }
 
     private boolean tryParseDouble(String s) {
-        try {
+        try{
             Double.parseDouble(s);
             return true;
         } catch (NumberFormatException e) {

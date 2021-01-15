@@ -14,7 +14,7 @@ public class NUMBER extends Command<Double> implements Expression {
 
     @Override
     public void setArgs(String... args) throws InvalidArgumentsException {
-        if (this.getArgs().length != 1) // args[0] == value
+        if(this.getArgs().length != 1) // args[0] == value
         {
             throw new InvalidArgumentsException();
         }

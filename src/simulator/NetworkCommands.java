@@ -23,7 +23,7 @@ public class NetworkCommands implements Closeable {
     public void connect(String hostname, int port) throws IOException {
         if (client == null) {
             client = new Socket();
-         //   client.connect(new InetSocketAddress(hostname, port), 5000);
+            client.connect(new InetSocketAddress(hostname, port), 5000);
         }
     }
 

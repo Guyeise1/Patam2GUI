@@ -1,7 +1,6 @@
 package Interpreter.Network;
 
-import Interpreter.Variables.Fundation.VariableManager;
-import Interpreter.Variables.Fundation.VariableProvider;
+import Interpreter.Commands.Fundation.VariablesFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -14,15 +13,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Client {
     private static Client instance;
 
-    private final VariableManager variableManager = VariableProvider.getInstance();
     private String hostname;
     private int port;
     private int frequency;
-    private CompletableFuture cli;
-    private final AtomicBoolean isRunning = new AtomicBoolean(false);
-
-    private Client() {
-    }
+    private AtomicBoolean isRunning = new AtomicBoolean(false);
 
     public static Client getInstance() {
         if (instance == null) {
@@ -31,31 +25,21 @@ public class Client {
         return instance;
     }
 
+    private Client(){}
+
     public void start() {
-        if (cli != null) {
-            cli.cancel(true);
-        }
-        cli = CompletableFuture.runAsync(() -> {
+        CompletableFuture.runAsync( () -> {
             try (Socket cli = new Socket()) {
-                while (!cli.isConnected()) {
-                    try {
-                        cli.connect(new InetSocketAddress(hostname, port));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                cli.connect(new InetSocketAddress(hostname, port));
                 this.isRunning.set(true);
-                do {
-                    try {
-                        sendData(cli.getOutputStream());
-                        TimeUnit.MILLISECONDS.sleep(1000 / frequency);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } while (this.isRunning.get());
+                while (this.isRunning.get()) {
+                    sendData(cli.getOutputStream());
+                    TimeUnit.MILLISECONDS.sleep(1000 / frequency);
+                }
 
                 cli.getOutputStream().write("bye".getBytes());
                 cli.getOutputStream().flush();
+                cli.close();
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             } finally {
@@ -66,25 +50,17 @@ public class Client {
 
     public void stop() {
         this.isRunning.set(false);
-        try {
-            cli.get();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void sendData(OutputStream os) throws IOException {
-        variableManager.readLock().lock();
-        try {
-            for (String var : new String[]{"simX", "simY", "simZ"}) {
-                if (variableManager.getValue(var) != null) {
-                    os.write(("set " + var + " " + variableManager.getValue(var)).getBytes());
-                    os.flush();
-                }
+        for (String var : new String[]{"simX", "simY","simZ"} ) {
+            try {
+                os.write(("set " + var + " " + VariablesFactory.getInstance().getVariable(var).value.toString()).getBytes());
+            } catch (RuntimeException e) {
+                // System.out.println("did not found variable " + var + " ignoring...");
             }
-        } finally {
-            variableManager.readLock().unlock();
         }
+        os.flush();
     }
 
     public String getHostname() {

@@ -1,22 +1,21 @@
 package test;
 
 import Interpreter.Commands.Fundation.CodeBlock;
+import Interpreter.Commands.Fundation.Variables;
+import Interpreter.Commands.Fundation.VariablesFactory;
 import Interpreter.Commands.util.DISCONNECT;
-import Interpreter.Variables.Fundation.VariableManager;
-import Interpreter.Variables.Fundation.VariableProvider;
 
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 public class MyInterpreter {
 
-	VariableManager variableManager;
+	Variables variables;
 
 	private MyInterpreter() {
-		variableManager = VariableProvider.getInstance();
+		variables = VariablesFactory.getInstance();
 	}
 
-	private final static MyInterpreter instance = new MyInterpreter();
+	private static MyInterpreter instance = new MyInterpreter();
 
 	public static MyInterpreter getInstance() {
 		return instance;
@@ -26,28 +25,43 @@ public class MyInterpreter {
 
 	public String assignVariableValues(String command) {
 		String replacedVariableWithValueCommand = command;
-		for (String variableName : variableManager.getAll()) {
-			Double value = variableManager.getValue(variableName);
-			if (value != null) {
-				replacedVariableWithValueCommand =
-						replacedVariableWithValueCommand.replace(variableName, String.valueOf(value));
+		for (String variableName : variables.allVariableNames()) {
+			Double value = variables.getValue(variableName);
+			while(variables.containsVariable(variableName) && value == null && command.contains(variableName)) {
+				try {
+					Thread.sleep(100);
+					value = variables.getValue(variableName);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			if(value != null) {
+				replacedVariableWithValueCommand = replacedVariableWithValueCommand.replace(variableName, String.valueOf(value));
 			}
 		}
 		return replacedVariableWithValueCommand;
 	}
 
-	public VariableManager getVariablesFactory() {
-		return variableManager;
+	public String[] assignVariableValues(String... commands) {
+		return Stream.of(commands)
+				.map(this::assignVariableValues)
+				.toArray(String[]::new);
+
 	}
 
+	public Variables getVariablesFactory() {
+		return variables;
+	}
+
+	public static int countRun = 0;
 	public static int interpret(String[] lines){
+		countRun ++;
+		getInstance().variables.clean();
 		try {
-			TimeUnit.MILLISECONDS.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		getInstance().variableManager.clear();
+			new DISCONNECT().execute();
+		} catch (Exception ignored) {}
 		String code = String.join("\n", lines);
+		System.out.println("test #" + countRun + " code for run is:\n " + code);
 		CodeBlock cb = new CodeBlock(code);
 		try {
 			return cb.execute();

@@ -10,16 +10,8 @@ import java.lang.reflect.InvocationTargetException;
 public class DISCONNECT extends Command<Void> {
     @Override
     public Void execute() throws CommandNotFoundException, InstantiationException, InvocationTargetException, NoSuchMethodException, InvalidArgumentsException, IllegalAccessException, InterpreterException, InvalidConditionFormatException, NoCommandsLeftException, CalculateException {
-        try {
-            Server.getInstance().stop();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            Client.getInstance().stop();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Server.getInstance().stop();
+        Client.getInstance().stop();
         return null;
     }
 }

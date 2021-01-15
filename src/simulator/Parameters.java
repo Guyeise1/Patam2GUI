@@ -22,6 +22,24 @@ public class Parameters {
         NetworkCommands.getInstance().write("setd " + param.path + " " + value);
     }
 
+
+    public static Optional<Double> getDoubleValue(String param) {
+        try {
+            NetworkCommands.getInstance().write("data");
+            NetworkCommands.getInstance().write("get " + param);
+
+            String value = NetworkCommands.getInstance().read();
+            return Optional.of(Double.parseDouble(value));
+        } catch (IOException e) {
+            return Optional.empty();
+        }
+    }
+
+    public static void setDoubleValue(String param, double value) {
+        NetworkCommands.getInstance().write("data");
+        NetworkCommands.getInstance().write("setd " + param + " " + value);
+    }
+
     public enum SimulatorParam {
         LATITUDE_DEG("/position/latitude-deg"), // y
         ALTITUDE_FT("/position/altitude-ft"),

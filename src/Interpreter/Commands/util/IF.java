@@ -8,7 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 public class IF extends ConditionalCommand {
     @Override
     public Void execute() throws CommandNotFoundException, InstantiationException, InvocationTargetException, NoSuchMethodException, InvalidArgumentsException, IllegalAccessException, InterpreterException, InvalidConditionFormatException, NoCommandsLeftException, CalculateException {
-        if (this.getCondition().calculate()) {
+        if(this.getCondition().calculate()) {
             this.getCodeBlock().execute();
         }
         return null;

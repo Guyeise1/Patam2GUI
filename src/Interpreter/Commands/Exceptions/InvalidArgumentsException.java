@@ -1,6 +1,6 @@
 package Interpreter.Commands.Exceptions;
 
-public class InvalidArgumentsException extends CommandException {
+public class InvalidArgumentsException extends CommandException{
     public InvalidArgumentsException(String s) {
         super(s);
     }

@@ -26,6 +26,7 @@ public class OPENDATASERVER extends BinaryCommand<Void> {
         Server.getInstance().setPort(port);
         Client.getInstance().setFrequency(frequency);
         Server.getInstance().start();
+
         return null;
     }
 }

@@ -1,6 +1,7 @@
 package sample.Map;
 
 import javafx.scene.paint.Color;
+import pathCalculator.PathCalculatorClient;
 import sample.Helpers.ArrayFlatter;
 import sample.StaticClasses.ColorAndHeight;
 import sample.StaticClasses.Point;
@@ -172,7 +173,15 @@ public class MapModel {
     }
 
     public CompletableFuture<List<Point>> calculateShortestPathBetween(Point startPoint, Point endPoint) {
-        return CompletableFuture.supplyAsync(()-> {
+        return CompletableFuture.supplyAsync(() -> {
+                    try {
+                        return PathCalculatorClient.getInstance().requestSolution(this);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                }
+              /*  ()-> {
             try {
                 Thread.sleep(500);
             } catch (Exception ignored) {}
@@ -188,10 +197,11 @@ public class MapModel {
                 pointToAdd = new Point(pointToAdd.x, pointToAdd.y + Double.compare(mapEnd.y, pointToAdd.y));
             }
             return response;
-        });
+        } */
+        );
     }
 
-    private Point toMapPoint(Point geoPoint) {
+    public Point toMapPoint(Point geoPoint) {
         double x = (geoPoint.x - getStartPosition().x) / getSquareSize();
         double y = (geoPoint.y - getStartPosition().y) / getSquareSize();
         return new Point((int)x, (int)y);

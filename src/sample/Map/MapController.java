@@ -10,6 +10,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
+import pathCalculator.PathCalculatorClient;
 import sample.Helpers.AlertHelper;
 import sample.Helpers.ArrayFlatter;
 import sample.StaticClasses.ColorAndHeight;
@@ -117,8 +118,11 @@ public class MapController {
         double endX = ( view.column + 0.5 ) * model.getSquareSize() + model.getStartPosition().x;
         double endY = ( view.row + 0.5 ) * model.getSquareSize() + model.getStartPosition().y;
         model.setEndPosition(new Point(endX, endY));
-        calculatePath(model.getStartPosition(), model.getEndPosition());
-        //redrawGridPane();
+        if (PathCalculatorClient.getInstance().isConnected()) {
+            calculatePath(model.getStartPosition(), model.getEndPosition());
+        } else {
+            redrawGridPane();
+        }
     }
 
     private void calculatePath(Point geoStart, Point geoEnd) {
@@ -130,5 +134,13 @@ public class MapController {
                 }
             });
         });
+    }
+
+    public void onCalculatePathPressed(ActionEvent actionEvent) {
+        try {
+            PathCalculatorClient.getInstance().connect();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

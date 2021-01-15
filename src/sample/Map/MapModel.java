@@ -1,6 +1,7 @@
 package sample.Map;
 
 import javafx.scene.paint.Color;
+import pathCalculator.PathCalculatorClient;
 import sample.Helpers.ArrayFlatter;
 import sample.StaticClasses.ColorAndHeight;
 import sample.StaticClasses.Point;
@@ -9,6 +10,7 @@ import simulator.Parameters;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -49,7 +51,6 @@ public class MapModel {
     public void loadMapFromFile(String fileName) throws IOException, VerifyError {
         List<List<Double>> heigths = new ArrayList<>();
         String row;
-        double maxHeight = 0;
         int maxCount = 0;
 
         try(BufferedReader csvReader = new BufferedReader(new FileReader(fileName))) {
@@ -78,22 +79,29 @@ public class MapModel {
                         .filter(number -> !number.isEmpty())
                         .map(Double::parseDouble)
                         .collect(Collectors.toList());
-                maxHeight = Math.max(maxHeight, Collections.max(heightsRow));
                 maxCount = Math.max(maxCount, heightsRow.size());
                 heigths.add(heightsRow);
             }
         }
-        this.map = Optional.of(buildMatrixFromList(heigths, maxHeight, maxCount));
+        this.map = Optional.of(buildMatrixFromList(heigths, maxCount));
         listenForAirplaneChanged();
     }
 
-    private ColorAndHeight[][] buildMatrixFromList(List<List<Double>> heigths, double maxHeight, int maxCount) throws VerifyError {
+    private ColorAndHeight[][] buildMatrixFromList(List<List<Double>> heigths, int maxCount) throws VerifyError {
         verifyMatrix(heigths, maxCount);
         heigths = ArrayFlatter.decreaseMatrix(heigths);
+        double minHeight = Double.MAX_VALUE, maxHeight = Double.MIN_VALUE;
         int d_1 = heigths.size();
         int d_2 = heigths.get(0).size();
+        for (int x = 0; x < d_1; x++) {
+            for (int y = 0; y < d_2; y++) {
+                double height = heigths.get(x).get(y);
+                minHeight = Math.min(height, minHeight);
+                maxHeight = Math.max(height, maxHeight);
+            }
+        }
         ColorAndHeight[][] matrix = new ColorAndHeight[d_1][d_2];
-        Function<Double, Color> heightToColor = buildColorFromHeightFunction(maxHeight);
+        Function<Double, Color> heightToColor = buildColorFromHeightFunction(minHeight, maxHeight);
         for (int x = 0; x < d_1; x++) {
             matrix[x] = new ColorAndHeight[d_2];
             for (int y = 0; y < d_2; y++) {
@@ -120,9 +128,9 @@ public class MapModel {
 //        }
     }
 
-    private Function<Double, Color> buildColorFromHeightFunction(double maxHeight) {
+    private Function<Double, Color> buildColorFromHeightFunction(double minHeight, double maxHeight) {
         return height ->  {
-            double percentage = 1.0 - height / maxHeight;
+            double percentage = (maxHeight - height) / (maxHeight - minHeight);
             int red = 255;
             int green = 255;
             if (percentage >= 0 && percentage <= 0.5) {
@@ -162,6 +170,41 @@ public class MapModel {
         double x = Parameters.getDoubleValue(LONGITUDE_DEG).orElseThrow(() -> new NoSuchElementException("Error getting the x axis"));
         double y = Parameters.getDoubleValue(Parameters.SimulatorParam.LATITUDE_DEG).orElseThrow(() -> new NoSuchElementException("Error getting the y axis"));
         return new Point(x,y);
+    }
+
+    public CompletableFuture<List<Point>> calculateShortestPathBetween(Point startPoint, Point endPoint) {
+        return CompletableFuture.supplyAsync(() -> {
+                    try {
+                        return PathCalculatorClient.getInstance().requestSolution(this);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                }
+              /*  ()-> {
+            try {
+                Thread.sleep(500);
+            } catch (Exception ignored) {}
+            Point mapStart = toMapPoint(startPoint), mapEnd = toMapPoint(endPoint);
+            List<Point> response = new ArrayList<>();
+            Point pointToAdd = new Point(mapStart.x, mapStart.y);
+            while (pointToAdd.x != mapEnd.x) {
+                response.add(pointToAdd);
+                pointToAdd = new Point(pointToAdd.x + Double.compare(mapEnd.x, pointToAdd.x), pointToAdd.y);
+            }
+            while (pointToAdd.y != mapEnd.y) {
+                response.add(pointToAdd);
+                pointToAdd = new Point(pointToAdd.x, pointToAdd.y + Double.compare(mapEnd.y, pointToAdd.y));
+            }
+            return response;
+        } */
+        );
+    }
+
+    public Point toMapPoint(Point geoPoint) {
+        double x = (geoPoint.x - getStartPosition().x) / getSquareSize();
+        double y = (geoPoint.y - getStartPosition().y) / getSquareSize();
+        return new Point((int)x, (int)y);
     }
 
     ////// Event Handlers

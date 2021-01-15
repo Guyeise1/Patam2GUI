@@ -1,19 +1,22 @@
 package sample.Map;
 
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 
-public class MapItemView extends Pane {
+public class MapItemView extends BorderPane {
 
     public final int column;
     public final int row;
 
     public String text;
 
-    private TextArea heightTextView;
+    private Text heightTextView;
 
     private ImageView iconImageView;
 
@@ -22,25 +25,26 @@ public class MapItemView extends Pane {
     final static Image AIRPLANE_IMAGE = new Image(AIRPLANE_LOCATION);
     final static Image X_IMAGE = new Image(X_LOCATION);
 
-    public MapItemView(int column, int row) {
+    public MapItemView(int column, int row, int minWidth, int minHeight) {
         this.column = column;
         this.row = row;
+        setMinWidth(minWidth);
+        setMinHeight(minHeight);
         createImageView();
         createTextView();
+        super.setBorder(new Border(new BorderStroke(Color.BLACK,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(0.5))));
     }
 
     private void createTextView() {
-        this.heightTextView = new TextArea();
-        this.heightTextView.setBackground(Background.EMPTY);
+        this.heightTextView = new Text();
         heightTextView.setText(text);
-        heightTextView.setPrefRowCount(3);
-        heightTextView.setPrefRowCount(1);
     }
 
     private void createImageView() {
         this.iconImageView = new ImageView();
-        iconImageView.setFitHeight(50);
-        iconImageView.setFitWidth(50);
+        iconImageView.setFitHeight(super.getMinHeight());
+        iconImageView.setFitWidth(super.getMinHeight());
     }
 
     public void setText(String text){
@@ -57,7 +61,12 @@ public class MapItemView extends Pane {
 
     public void displayText() {
         getChildren().clear();
-        getChildren().add(heightTextView);
+        super.setCenter(heightTextView);
+    }
+
+    public void markAsViaSquare() {
+        String blue = "#0000FF";
+        setBackground(new Background(new BackgroundFill(Paint.valueOf(blue), null, null)));
     }
 
     public void displayX() {
@@ -69,6 +78,7 @@ public class MapItemView extends Pane {
     }
 
     public void clear() {
+        setBackground(Background.EMPTY);
         displayText();
     }
 }

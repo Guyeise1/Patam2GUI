@@ -31,7 +31,7 @@
                     <Button mnemonicParsing="false" scaleX="2.0" scaleY="2.0" text="Connect" GridPane.halignment="CENTER" />
                     <Button fx:id="loadDataButton" onAction="#onLoadButtonPressed" mnemonicParsing="false" scaleX="2.0" scaleY="2.0" text="Load data" GridPane.columnIndex="1" GridPane.halignment="CENTER" >
                     </Button>
-                    <Button mnemonicParsing="false" scaleX="2.0" scaleY="2.0" text="Calculate path" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
+                    <Button onAction="#onCalculatePathPressed" mnemonicParsing="false" scaleX="2.0" scaleY="2.0" text="Calculate path" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
                 </children>
             </GridPane>
             <GridPane fx:id="map" gridLinesVisible="true" GridPane.rowIndex="1">

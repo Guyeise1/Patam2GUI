@@ -81,12 +81,13 @@ class Main {
     public static void main(String[] args) throws IOException {
         ServerSocket server = new ServerSocket(15000);
         System.out.println("Starting server on 15000");
-        while(true) {
-            try {
-                handleClient(server.accept());
-            } catch (Exception e) {
-                e.printStackTrace();
+        try {
+            Socket client = server.accept();
+            while(true) {
+                handleClient(client);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
@@ -108,7 +109,6 @@ class Main {
         System.out.println("sending: " + answer);
         client.getOutputStream().write(answer.getBytes());
         System.out.println("Closing client socket");
-        client.close();
     }
 
     private static int[][] parseMap(String[] matrix) {

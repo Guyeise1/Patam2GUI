@@ -16,8 +16,8 @@ public class PathCalculatorClient {
 
     private static PathCalculatorClient instance;
 
-    private static InetAddress DEFAULT_SERVER_HOST = InetAddress.getLoopbackAddress();
-    private static int DEFAULT_PORT = 15000;
+    public static final InetAddress DEFAULT_SERVER_HOST = InetAddress.getLoopbackAddress();
+    public static final int DEFAULT_PORT = 15000;
     public static final String SEPERATOR = "~";
 
 
@@ -42,8 +42,8 @@ public class PathCalculatorClient {
         return isConnected;
     }
 
-    public void connect() throws IOException {
-        Socket socket = new Socket(DEFAULT_SERVER_HOST, DEFAULT_PORT);
+    public void connect(String host, int port) throws IOException {
+        Socket socket = new Socket(host, port);
         inputStream = socket.getInputStream();
         outputStream = socket.getOutputStream();
         isConnected = true;

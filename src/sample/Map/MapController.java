@@ -10,14 +10,17 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Window;
+import javafx.util.Pair;
 import pathCalculator.PathCalculatorClient;
 import sample.Helpers.AlertHelper;
 import sample.Helpers.ArrayFlatter;
 import sample.StaticClasses.ColorAndHeight;
 import sample.StaticClasses.Point;
+import simulator.NetworkCommands;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 
@@ -35,13 +38,16 @@ public class MapController {
 
     @FXML
     private void onLoadButtonPressed(ActionEvent event) {
+        Window owner = loadDataButton.getScene().getWindow();
         final String CSV_FILE_LOCATION = "Data/Honolulu.csv"; // TODO: Should input file location from user. until then, from csv.
-        if(loadDataFromFile(CSV_FILE_LOCATION)) {
-            ColorAndHeight[][] matrix = model.getColorMap();
-            updateGridPane(matrix);
-            model.addLocationChangedListener(this::onAirplaneChangedLocation);
+        Optional<String> fileName = AlertHelper.displayFileDialog(owner, Optional.of(CSV_FILE_LOCATION)).showAndWait();
+        if (fileName.isPresent()) {
+            if (loadDataFromFile(fileName.get())) {
+                ColorAndHeight[][] matrix = model.getColorMap();
+                updateGridPane(matrix);
+                model.addLocationChangedListener(this::onAirplaneChangedLocation);
+            }
         }
-
     }
 
     private boolean loadDataFromFile(String fileName) {
@@ -137,10 +143,32 @@ public class MapController {
     }
 
     public void onCalculatePathPressed(ActionEvent actionEvent) {
+        Window owner = loadDataButton.getScene().getWindow();
         try {
-            PathCalculatorClient.getInstance().connect();
+            Optional<String> defaultHost = Optional.of(PathCalculatorClient.DEFAULT_SERVER_HOST.getHostAddress());
+            Optional<Integer> defaultPort = Optional.of(PathCalculatorClient.DEFAULT_PORT);
+            Optional<Pair<String, Integer>> result = AlertHelper.displayHostAndPort(owner, defaultHost, defaultPort).showAndWait();
+            if (result.isPresent()) {
+                PathCalculatorClient.getInstance().connect(result.get().getKey(), result.get().getValue());
+                AlertHelper.displayAlert(owner, Alert.AlertType.CONFIRMATION, "OK", "Connection OK");
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            AlertHelper.displayAlert(owner, Alert.AlertType.ERROR, "NOT GOOD", "Connection to server Failed");
+        }
+    }
+
+    public void onConnectButtonPressed(ActionEvent actionEvent) {
+        Window owner = loadDataButton.getScene().getWindow();
+        try {
+            Optional<String> defaultServer = Optional.of("localhost");
+            Optional<Integer> defaultPort = Optional.of(5402);
+            Optional<Pair<String, Integer>> ipAndPort = AlertHelper.displayHostAndPort(owner, defaultServer, defaultPort).showAndWait();
+            if (ipAndPort.isPresent()) {
+                NetworkCommands.getInstance().connect(ipAndPort.get().getKey(), ipAndPort.get().getValue());
+                AlertHelper.displayAlert(owner, Alert.AlertType.CONFIRMATION, "OK", "Connection to simulator OK");
+            }
+        } catch (IOException e) {
+            AlertHelper.displayAlert(owner, Alert.AlertType.ERROR, "Not Good", "Connection to simulator not established");
         }
     }
 }

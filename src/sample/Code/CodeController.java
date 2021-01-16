@@ -47,8 +47,8 @@ public class CodeController {
     }
 
     public void radioButtonManualPilotClick(ActionEvent actionEvent) {
-        if(this.radioButtonManualPilot.isSelected()) {
-            t.interrupt();
+        if(this.radioButtonManualPilot.isSelected() && t != null) {
+            t.stop();
         }
     }
 }

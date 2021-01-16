@@ -39,11 +39,7 @@ public class MapModel {
         this.endPosition = Optional.empty();
         locationChangedListeners = new ArrayList<>();
         shouldListenToAirplaneChanges = false;
-        try {
-            NetworkCommands.getInstance().connect("46.116.232.105", 5402);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
 
     //// Loading data from files

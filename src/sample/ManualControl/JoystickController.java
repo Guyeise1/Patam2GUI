@@ -59,7 +59,7 @@ public class JoystickController{
             joystickCircle.setCenterX(joystickPoint.x);
             joystickCircle.setCenterY(joystickPoint.y);
             this.aileronRatio.set((joystickPoint.x - circleCenter.x) / circleRadius);
-            this.elevatorRatio.set((joystickPoint.y - circleCenter.y) / circleRadius);
+            this.elevatorRatio.set((circleCenter.y - joystickPoint.y) / circleRadius);
             simulator.Parameters.setDoubleValue(Parameters.SimulatorParam.AILERON, this.aileronRatio.get());
             simulator.Parameters.setDoubleValue(Parameters.SimulatorParam.ELEVATOR, this.elevatorRatio.get());
         }
@@ -71,6 +71,10 @@ public class JoystickController{
         final Point circleCenter = new Point(circleArea.getCenterX(), circleArea.getCenterY());
         joystickCircle.setCenterX(circleCenter.x);
         joystickCircle.setCenterY(circleCenter.y);
+        this.aileronRatio.set(0);
+        this.elevatorRatio.set(0);
+        simulator.Parameters.setDoubleValue(Parameters.SimulatorParam.AILERON, 0);
+        simulator.Parameters.setDoubleValue(Parameters.SimulatorParam.ELEVATOR, 0);
     }
 
 

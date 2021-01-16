@@ -9,8 +9,8 @@ public class Parameters {
         try {
             NetworkCommands.getInstance().write("data");
             NetworkCommands.getInstance().write("get " + param.path);
-
             String value = NetworkCommands.getInstance().read();
+            value = value.replace("\n", "");
             return Optional.of(Double.parseDouble(value));
         } catch (IOException e) {
             return Optional.empty();

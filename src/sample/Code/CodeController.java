@@ -33,6 +33,8 @@ public class CodeController {
     }
 
     public void radioButtonAutoPilotClick(ActionEvent actionEvent) {
+        radioButtonManualPilot.setSelected(false);
+        radioButtonAutoPilot.setSelected(true);
         if(radioButtonAutoPilot.isSelected()) {
             try {
                 t = new Thread(this::execute);
@@ -47,6 +49,8 @@ public class CodeController {
     }
 
     public void radioButtonManualPilotClick(ActionEvent actionEvent) {
+        radioButtonManualPilot.setSelected(true);
+        radioButtonAutoPilot.setSelected(false);
         if(this.radioButtonManualPilot.isSelected() && t != null) {
             t.stop();
         }

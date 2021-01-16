@@ -142,7 +142,7 @@ public class MapModel {
 
     public void listenForAirplaneChanged() {
         shouldListenToAirplaneChanges = true;
-        new Thread(this::checkForAirplaneChangedLocation).start();
+        //new Thread(this::checkForAirplaneChangedLocation).start();
     }
 
     private void checkForAirplaneChangedLocation() {

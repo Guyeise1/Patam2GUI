@@ -22,7 +22,7 @@ public class AlertHelper {
 
     public static Dialog<Pair<String, Integer>> displayHostAndPort(Window owner, Optional<String> defaultHostname, Optional<Integer> defaultPort) {
         Dialog<Pair<String, Integer>> dialog = new Dialog<>();
-        dialog.setTitle("TestName");
+        dialog.setTitle("get ip and port");
         dialog.initOwner(owner);
 
         // Set the button types.
@@ -66,7 +66,7 @@ public class AlertHelper {
     }
     public static Dialog<String> displayFileDialog(Window owner, Optional<String> defaultFileName) {
         Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("TestName");
+        dialog.setTitle("get file name");
         dialog.initOwner(owner);
 
         // Set the button types.

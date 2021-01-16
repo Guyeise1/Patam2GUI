@@ -1,0 +1,1 @@
+"C:\Program Files\FlightGear 2020.3.5\bin\fgfs.exe --telnet=socket,in,10,127.0.0.1,5402,tcp"

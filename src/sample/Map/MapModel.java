@@ -39,11 +39,7 @@ public class MapModel {
         this.endPosition = Optional.empty();
         locationChangedListeners = new ArrayList<>();
         shouldListenToAirplaneChanges = false;
-        try {
-            NetworkCommands.getInstance().connect("Guy-VM", 5402);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
     }
 
     //// Loading data from files
@@ -63,8 +59,8 @@ public class MapModel {
             double x = Double.parseDouble(quardinates[0]);
             double y = Double.parseDouble(quardinates[1]);
             setStartPosition(new Point(x,y));
-            Parameters.setDoubleValue(LONGITUDE_DEG, x);
-            Parameters.setDoubleValue(LATITUDE_DEG, y);
+            /*Parameters.setDoubleValue(LONGITUDE_DEG, x);
+            Parameters.setDoubleValue(LATITUDE_DEG, y);*/
             setCurrentLocation(getStartPosition());
 
             // TODO: Implement Retviving SQUARE SIZE from file
@@ -146,7 +142,7 @@ public class MapModel {
 
     public void listenForAirplaneChanged() {
         shouldListenToAirplaneChanges = true;
-        new Thread(this::checkForAirplaneChangedLocation).start();
+        //new Thread(this::checkForAirplaneChangedLocation).start();
     }
 
     private void checkForAirplaneChangedLocation() {

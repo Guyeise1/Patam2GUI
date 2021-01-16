@@ -9,8 +9,8 @@ public class Parameters {
         try {
             NetworkCommands.getInstance().write("data");
             NetworkCommands.getInstance().write("get " + param.path);
-
             String value = NetworkCommands.getInstance().read();
+            value = value.replace("\n", "");
             return Optional.of(Double.parseDouble(value));
         } catch (IOException e) {
             return Optional.empty();
@@ -22,10 +22,34 @@ public class Parameters {
         NetworkCommands.getInstance().write("setd " + param.path + " " + value);
     }
 
+
+    public static Optional<Double> getDoubleValue(String param) {
+        try {
+            NetworkCommands.getInstance().write("data");
+            NetworkCommands.getInstance().write("get " + param);
+
+            String value = NetworkCommands.getInstance().read();
+            return Optional.of(Double.parseDouble(value));
+        } catch (IOException e) {
+            return Optional.empty();
+        }
+    }
+
+    public static void setDoubleValue(String param, double value) {
+        NetworkCommands.getInstance().write("data");
+        NetworkCommands.getInstance().write("setd " + param + " " + value);
+    }
+
     public enum SimulatorParam {
-        LATITUDE_DEG("/position/latitude-deg"), // y
+        LATITUDE_DEG("/position/latitude-deg"),
         ALTITUDE_FT("/position/altitude-ft"),
-        LONGITUDE_DEG("/position/longitude-deg"); // x
+        LONGITUDE_DEG("/position/longitude-deg"),
+        RUDDER("/controls/flight/rudder"),
+        AILERON("/controls/flight/aileron"),
+        ELEVATOR("/controls/flight/elevator"),
+        THROTTLE("/controls/engines/current-engine/throttle");
+
+
 
         private final String path;
 

@@ -59,8 +59,8 @@ public class MapModel {
             double x = Double.parseDouble(quardinates[0]);
             double y = Double.parseDouble(quardinates[1]);
             setStartPosition(new Point(x,y));
-            Parameters.setDoubleValue(LONGITUDE_DEG, x);
-            Parameters.setDoubleValue(LATITUDE_DEG, y);
+            /*Parameters.setDoubleValue(LONGITUDE_DEG, x);
+            Parameters.setDoubleValue(LATITUDE_DEG, y);*/
             setCurrentLocation(getStartPosition());
 
             // TODO: Implement Retviving SQUARE SIZE from file

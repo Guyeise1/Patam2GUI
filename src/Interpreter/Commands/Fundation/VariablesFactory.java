@@ -89,12 +89,8 @@ public final class VariablesFactory implements Variables {
         while(true) {
             try {
                 this.variableToAutoUpdate.forEach(this::updateVaraibleFromSimulator);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
                 Thread.sleep(100);
-            } catch (InterruptedException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

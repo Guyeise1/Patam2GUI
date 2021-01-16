@@ -45,7 +45,7 @@
           <RowConstraints maxHeight="668.0" minHeight="10.0" prefHeight="605.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <RadioButton GridPane.rowIndex="0" mnemonicParsing="false" text="Manual" GridPane.halignment="CENTER">
+            <RadioButton  fx:id="radioButtonManualPilot" onAction="#radioButtonManualPilotClick" GridPane.rowIndex="0" mnemonicParsing="false" text="Manual" GridPane.halignment="CENTER">
                <font>
                   <Font size="70.0" />
                </font>

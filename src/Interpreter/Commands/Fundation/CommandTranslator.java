@@ -22,6 +22,8 @@ public class CommandTranslator {
         this.commands.put("openDataServer", OPENDATASERVER.class);
         this.commands.put("connect", CONNECT.class);
         this.commands.put("disconnect", DISCONNECT.class);
+        this.commands.put("sleep", SLEEP.class);
+        this.commands.put("print", PRINT.class);
 
     }
 

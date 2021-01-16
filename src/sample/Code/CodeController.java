@@ -7,9 +7,12 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 
 public class CodeController {
-    Thread t;
+    public static Thread t;
     @FXML
     public RadioButton radioButtonAutoPilot;
+
+    @FXML
+    public RadioButton radioButtonManualPilot;
 
     @FXML
     private TextArea textAreaCode;
@@ -25,7 +28,7 @@ public class CodeController {
             load();
             code.execute();
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -39,6 +42,12 @@ public class CodeController {
                 e.printStackTrace();
             }
         } else {
+            t.interrupt();
+        }
+    }
+
+    public void radioButtonManualPilotClick(ActionEvent actionEvent) {
+        if(this.radioButtonManualPilot.isSelected()) {
             t.interrupt();
         }
     }

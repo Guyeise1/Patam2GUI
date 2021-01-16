@@ -41,9 +41,15 @@ public class Parameters {
     }
 
     public enum SimulatorParam {
-        LATITUDE_DEG("/position/latitude-deg"), // y
+        LATITUDE_DEG("/position/latitude-deg"),
         ALTITUDE_FT("/position/altitude-ft"),
-        LONGITUDE_DEG("/position/longitude-deg"); // x
+        LONGITUDE_DEG("/position/longitude-deg"),
+        RUDDER("/controls/flight/rudder"),
+        AILERON("/controls/flight/aileron"),
+        ELEVATOR("/controls/flight/elevator"),
+        THROTTLE("/controls/engines/current-engine/throttle");
+
+
 
         private final String path;
 

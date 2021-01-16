@@ -7,9 +7,11 @@ import javafx.scene.control.Slider;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import sample.StaticClasses.Point;
+import simulator.Parameters;
 
 public class JoystickController{
 
@@ -58,7 +60,10 @@ public class JoystickController{
             joystickCircle.setCenterY(joystickPoint.y);
             this.aileronRatio.set((joystickPoint.x - circleCenter.x) / circleRadius);
             this.elevatorRatio.set((joystickPoint.y - circleCenter.y) / circleRadius);
+            simulator.Parameters.setDoubleValue(Parameters.SimulatorParam.AILERON, this.aileronRatio.get());
+            simulator.Parameters.setDoubleValue(Parameters.SimulatorParam.ELEVATOR, this.elevatorRatio.get());
         }
+
     }
 
     @FXML
@@ -68,11 +73,15 @@ public class JoystickController{
         joystickCircle.setCenterY(circleCenter.y);
     }
 
-    @FXML
-    private void onThrottleSlide(DragEvent event) {
-    }
 
     @FXML
-    private void onRudderSlide(DragEvent event) {
+    private void initialize() {
+        throttleSlider.valueProperty().addListener(value -> {
+            simulator.Parameters.setDoubleValue(Parameters.SimulatorParam.THROTTLE, throttleSlider.getValue());
+        });
+        rudderSlider.valueProperty().addListener(value -> {
+            simulator.Parameters.setDoubleValue(Parameters.SimulatorParam.RUDDER, rudderSlider.getValue());
+        });
     }
+
 }

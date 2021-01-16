@@ -42,7 +42,7 @@ public class CodeController {
                 e.printStackTrace();
             }
         } else {
-            t.interrupt();
+            t.stop();
         }
     }
 

@@ -57,7 +57,7 @@ public class CodeBlock {
         Integer ret = 0;
         while(!this.code.equals("")) {
             Command<?> pop = pop();
-            System.out.println("Poped: " + pop.getClass().getSimpleName());
+            System.out.println("Popped: " + pop.getClass().getSimpleName());
             if(pop instanceof RETURN) {
                 ret = ((RETURN) pop).execute();
                 break;
